@@ -1,4 +1,4 @@
-package ru.antonsibgatulin.bankingservice.config;
+package ru.antonsibgatulin.bankingservice.config.app;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package ru.antonsibgatulin.bankingservice.config;
+package ru.antonsibgatulin.bankingservice.service.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.antonsibgatulin.bankingservice.except.BadRequestException;
 
 import java.io.IOException;
 
@@ -38,15 +39,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new InvalidDataException("Token invalid");
+                throw new BadRequestException("Token invalid");
 
             }
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
-
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 

@@ -1,2 +1,5 @@
-package ru.antonsibgatulin.bankingservice.entity.transaction;public class TransactionStatus {
+package ru.antonsibgatulin.bankingservice.entity.transaction;
+
+public enum TransactionStatus {
+    PENDING, CANCELED, FAILED, COMPLETED
 }

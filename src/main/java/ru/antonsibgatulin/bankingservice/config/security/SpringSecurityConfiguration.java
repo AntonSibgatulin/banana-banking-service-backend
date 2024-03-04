@@ -1,4 +1,4 @@
-package ru.antonsibgatulin.bankingservice.config;
+package ru.antonsibgatulin.bankingservice.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import ru.antonsibgatulin.bankingservice.service.jwt.JwtAuthenticationFilter;
 /*
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -23,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 @RequiredArgsConstructor
 public class SpringSecurityConfiguration {
 
@@ -35,7 +37,8 @@ public class SpringSecurityConfiguration {
         http.csrf().disable().exceptionHandling().disable()
                 .authorizeHttpRequests()
                 //.requestMatchers("/api/v1/seller/**", "/api/v1/reg/**", "/api/v1/auth/**").permitAll()
-                .requestMatchers("/**").permitAll()
+                //.requestMatchers("/api/**").authenticated()
+                .requestMatchers("/api/auth/signup", "api/auth/signin", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

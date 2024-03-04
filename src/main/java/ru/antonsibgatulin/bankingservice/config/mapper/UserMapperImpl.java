@@ -1,6 +1,5 @@
 package ru.antonsibgatulin.bankingservice.config.mapper;
 
-import org.springframework.stereotype.Component;
 import ru.antonsibgatulin.bankingservice.dto.user.response.UserDto;
 import ru.antonsibgatulin.bankingservice.entity.user.User;
 import ru.antonsibgatulin.bankingservice.mapper.UserMapper;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class UserMapperImpl  {
+public class UserMapperImpl implements UserMapper {
 
     @Override
     public UserDto fromUserToUserDto(User user) {
@@ -29,7 +28,7 @@ public class UserMapperImpl  {
 
                 user.getUsername(),
 
-            null,
+                null,
 
                 null
         );
@@ -48,8 +47,6 @@ public class UserMapperImpl  {
 
     }
 
-    public static void main(String[] args) {
-        UserMapperImpl userMapper = new UserMapper();
 
-    }
 }
+

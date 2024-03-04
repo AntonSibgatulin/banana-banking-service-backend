@@ -5,7 +5,7 @@ import ru.antonsibgatulin.bankingservice.entity.user.PhoneNumber;
 
 import java.util.List;
 
-public interface PhoneNumberMapperImpl {
+public interface PhoneNumberMapper {
     PhoneNumberDto phoneNumberToPhoneNumberDto(PhoneNumber phoneNumber);
     List<PhoneNumberDto> phoneNumberListToPhoneNumberDtoList(List<PhoneNumber> phoneNumbers);
 }
