@@ -1,24 +1,28 @@
-version: '3.3'
-
+version: '3'
 services:
-  db:
-    image: postgres:latest
-    restart: always
+  postgresql:
+    image: postgres:alpine
     environment:
-      POSTGRES_USER: user
+      POSTGRES_DB: banking_service
+      POSTGRES_USER: root
       POSTGRES_PASSWORD: Dert869$$
-      POSTGRES_DB: bankingservice
+    ports:
+      - 5432:5432
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    ports:
-      - "5432:5432"
-  adminer:
-    image: adminer:latest
-    restart: always
-    ports:
-      - "8085:8080"
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data: { }
+
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - 8080:8080
+#    depends_on:
+#      - db
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/banking_service
+#      SPRING_DATASOURCE_USERNAME: your_username
+#      SPRING_DATASOURCE_PASSWORD: your_password
