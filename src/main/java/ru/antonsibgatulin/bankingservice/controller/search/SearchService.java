@@ -19,6 +19,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class SearchService {
+
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 

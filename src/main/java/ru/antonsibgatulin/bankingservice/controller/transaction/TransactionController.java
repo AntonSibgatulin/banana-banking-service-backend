@@ -9,12 +9,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.antonsibgatulin.bankingservice.dto.transaction.request.TransactionDto;
 import ru.antonsibgatulin.bankingservice.dto.transaction.request.TransferManagerDto;
 import ru.antonsibgatulin.bankingservice.dto.transaction.response.TransactionStatusDto;
 import ru.antonsibgatulin.bankingservice.entity.transaction.TransactionStatus;
 
+@Validated
 @Tag(name = "Transaction Controller", description = "API for managing transactions")
 @RestController
 @RequestMapping("/api/transactions")

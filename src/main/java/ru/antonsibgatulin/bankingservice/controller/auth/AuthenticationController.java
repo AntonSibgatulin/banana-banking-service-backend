@@ -2,6 +2,7 @@ package ru.antonsibgatulin.bankingservice.controller.auth;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,7 +52,7 @@ import ru.antonsibgatulin.bankingservice.service.jwt.JwtService;
 
 import javax.validation.Valid;
 
-
+@Validated
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")

@@ -47,11 +47,11 @@ import ru.antonsibgatulin.bankingservice.except.BadRequestException;
 import ru.antonsibgatulin.bankingservice.except.NotFoundException;
 
 
+@Validated
 @RestController
 @RequestMapping("/api/profile")
 @RequiredArgsConstructor
 @Tag(name = "User change profile", description = "Change profile information about user")
-
 public class ProfileController {
 
 
