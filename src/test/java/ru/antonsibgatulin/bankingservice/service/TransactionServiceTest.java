@@ -56,12 +56,7 @@ import java.util.concurrent.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/*
-@SpringBootTest
-@ActiveProfiles("test")
 
-
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TransactionServiceTest {
@@ -88,7 +83,6 @@ public class TransactionServiceTest {
     private WalletRepository walletRepository;
 
     @Test
-    //@Transactional
     @Rollback(false)
     public void testRunTransactionThreadSafety() throws InterruptedException {
 

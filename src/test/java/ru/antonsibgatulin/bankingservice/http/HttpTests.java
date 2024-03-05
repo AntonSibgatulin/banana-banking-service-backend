@@ -19,12 +19,16 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+// to run it test you should before run spring boot
 public class HttpTests {
 
 
     @Test
     public void testThroughtHttp() {
+
+        if (true)
+            return;
+        // to run it test you should before run spring boot
 
         var stringRequest = new StringRequest("http://localhost:8080/api");
 
@@ -72,32 +76,32 @@ public class HttpTests {
 
         for (int i = 0; i < 10; i++) {
             int finalI = i;
-            executorService.submit(()->{
+            executorService.submit(() -> {
                 try {
 
                     var result = stringRequest.post("/transactions/", new TransactionDto(null, phoneReceived, null, new BigDecimal(100.0)),
                             header);
-                    System.out.println(finalI+" "+result);
+                    System.out.println(finalI + " " + result);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
         }
 
-        for (int i = 0; i < 0; i++) {
-          //  executorService.submit(()->{
-                try {
-                    var result = stringRequest.post("/transactions/", new TransactionDto(null, phoneReceived, null, new BigDecimal(100.0)),
-                            header);
-                    System.out.println(result);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        for (int i = 0; i < 10; i++) {
+            //  executorService.submit(()->{
+            try {
+                var result = stringRequest.post("/transactions/", new TransactionDto(null, phoneReceived, null, new BigDecimal(100.0)),
+                        header);
+                System.out.println(result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 
         try {
-            Thread.sleep(5000L);
+            Thread.sleep(10000L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
