@@ -28,6 +28,14 @@ import java.util.logging.Logger;
 @Component
 public class WalletSchedule {
     private final WalletRepository walletRepository;
+
+    private final PlatformTransactionManager platformTransactionManager;
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    private final Queue<BalanceDto> balanceDtoQueue = new LinkedBlockingQueue<>();
+
     private static final Logger log = Logger.getLogger(WalletSchedule.class.getName());
 
     private Thread balanceAdded = new Thread(new Runnable() {
