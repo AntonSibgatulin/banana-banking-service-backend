@@ -3,7 +3,9 @@ package ru.antonsibgatulin.bankingservice.entity.user;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,21 +32,13 @@ public class User implements UserDetails {
     @Column(length = 15, nullable = false)
     private String password;
 
-    @Column(length = 25 /*, nullable = false */)
+    @Column(length = 25)
     private String firstname;
-    @Column(length = 25 /*, nullable = false */)
+    @Column(length = 25)
     private String lastname;
-    @Column(length = 25 /*, nullable = false */)
+    @Column(length = 25)
     private String secondname;
 
-    /*
-    @Column(length = 25)
-    private String email;
-
-    @Column(length = 18)
-    private String phone;
-
-     */
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
