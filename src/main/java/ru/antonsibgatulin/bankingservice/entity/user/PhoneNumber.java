@@ -2,11 +2,11 @@ package ru.antonsibgatulin.bankingservice.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "phone_numbers")
 public class PhoneNumber {
@@ -16,9 +16,8 @@ public class PhoneNumber {
     private Long id;
 
 
-    @Column(length = 15, nullable = false,unique = true)
+    @Column(length = 15, nullable = false, unique = true)
     private String number;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
