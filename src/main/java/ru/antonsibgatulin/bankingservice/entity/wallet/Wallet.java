@@ -29,5 +29,7 @@ public class Wallet {
         this.balance = new BigDecimal(startDeposit.toString());
     }
 
-
+    public Wallet(User user) {
+        this.user = user;
+    }
 }

@@ -4,9 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+@NoArgsConstructor
 @Data
 @Schema(description = "Transfer Manager DTO")
 public class TransferManagerDto {
@@ -21,4 +23,9 @@ public class TransferManagerDto {
     @Schema(description = "Amount to be transferred")
     private BigDecimal amount;
 
+    public TransferManagerDto(Long senderId, Long receivedId, BigDecimal amount) {
+        this.senderId = senderId;
+        this.receivedId = receivedId;
+        this.amount = amount;
+    }
 }

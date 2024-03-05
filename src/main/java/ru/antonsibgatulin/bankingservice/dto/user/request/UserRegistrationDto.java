@@ -2,10 +2,14 @@ package ru.antonsibgatulin.bankingservice.dto.user.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Schema(description = "User Registration DTO")
 public class UserRegistrationDto {
@@ -35,5 +39,6 @@ public class UserRegistrationDto {
     @DecimalMin(value = "0.0", inclusive = false, message = "Start deposit must be greater than zero")
     @Schema(description = "Start deposit amount. Must be greater than zero")
     private BigDecimal startDeposit;
+
 
 }
