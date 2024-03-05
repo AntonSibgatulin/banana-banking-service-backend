@@ -74,36 +74,11 @@ public class ExceptionHandlerController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError(notFoundException.getMessage(), notFoundException.getCode()));
     }
 
-    /*
-        @ExceptionHandler(value = MethodArgumentNotValidException.class)
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public ResponseEntity handleValidationException(MethodArgumentNotValidException ex)
-        {
-            List<String> errorMessages = ((MethodArgumentNotValidException)ex)
-                    .getBindingResult()
-                    .getFieldErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return new ResponseEntity(errorMessages.toString(), HttpStatus.BAD_REQUEST);
-        }
-
-     */
-
-    /*
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiError> handleConstraintViolationException(ConstraintViolationException ex) {
-        String errors = ex.getConstraintViolations().stream()
-                .map(violation -> violation.getMessage())
-                .collect(Collectors.joining(", "));
-        return new ResponseEntity<>(new ApiError(errors, 400), HttpStatus.BAD_REQUEST);
-    }
-
-     */
 
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(RegistrationException.class)
+    @ResponseBody
     public ResponseEntity<ApiError> handleRegistrationException(RegistrationException ex) {
         return new ResponseEntity<>(new ApiError(ex.getMessage(), 409), HttpStatus.BAD_REQUEST);
     }
@@ -111,6 +86,7 @@ public class ExceptionHandlerController {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(AlreadyExistException.class)
+    @ResponseBody
     public ResponseEntity<ApiError> handleAlreadyException(AlreadyExistException ex) {
 
         return new ResponseEntity<>(new ApiError(ex.getMessage(), 409), HttpStatus.BAD_REQUEST);
@@ -118,6 +94,8 @@ public class ExceptionHandlerController {
 
 
     @ExceptionHandler(WebExchangeBindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
     public HttpStatus handleWebExchangeBindException(WebExchangeBindException e) {
 
         FieldError fieldError = e.getBindingResult().getFieldError();
@@ -155,6 +133,13 @@ public class ExceptionHandlerController {
 
     }
 
+
+    @ExceptionHandler(AccessDeniedForUnAutorizationException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ResponseEntity<ApiError> handleCustomAccessDeniedException(AccessDeniedForUnAutorizationException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiError(ex.getMessage(), 403));
+    }
 
     private String getResourceMessage(String key, String defaultMessage) {
         String message = applicationContext.getMessage(key, null, Locale.getDefault());
