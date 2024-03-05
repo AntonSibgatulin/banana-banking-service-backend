@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import ru.antonsibgatulin.bankingservice.config.mapper.UserMapperImpl;
 import ru.antonsibgatulin.bankingservice.dto.user.response.UserDto;
 import ru.antonsibgatulin.bankingservice.entity.user.User;
 import ru.antonsibgatulin.bankingservice.mapper.UserMapper;
@@ -13,12 +12,7 @@ import ru.antonsibgatulin.bankingservice.repository.UserRepository;
 
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import ru.antonsibgatulin.bankingservice.repository.UserRepository;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.time.LocalDate;
 import java.util.List;
 

@@ -6,6 +6,9 @@ import ru.antonsibgatulin.bankingservice.dto.user.response.EmailAddressDto;
 import ru.antonsibgatulin.bankingservice.dto.user.response.PhoneNumberDto;
 import ru.antonsibgatulin.bankingservice.entity.user.EmailAddress;
 import ru.antonsibgatulin.bankingservice.entity.user.PhoneNumber;
+import ru.antonsibgatulin.bankingservice.impl.EmailAddressImpl;
+import ru.antonsibgatulin.bankingservice.impl.PhoneNumberImpl;
+import ru.antonsibgatulin.bankingservice.impl.UserMapperImpl;
 import ru.antonsibgatulin.bankingservice.mapper.EmailAddressMapper;
 import ru.antonsibgatulin.bankingservice.mapper.PhoneNumberMapper;
 import ru.antonsibgatulin.bankingservice.mapper.UserMapper;
@@ -25,40 +28,11 @@ public class MapperConfigUser {
 
     @Bean
     public PhoneNumberMapper phoneNumberMapper() {
-        return new PhoneNumberMapper() {
-            @Override
-            public PhoneNumberDto phoneNumberToPhoneNumberDto(PhoneNumber phoneNumber) {
-                return new PhoneNumberDto(phoneNumber.getId(), phoneNumber.getNumber());
-            }
-
-            @Override
-            public List<PhoneNumberDto> phoneNumberListToPhoneNumberDtoList(List<PhoneNumber> phoneNumbers) {
-                List<PhoneNumberDto> phoneNumberDtos = new ArrayList<>();
-                for (PhoneNumber phoneNumber : phoneNumbers) {
-                    phoneNumberDtos.add(phoneNumberToPhoneNumberDto(phoneNumber));
-                }
-                return phoneNumberDtos;
-
-            }
-        };
+        return new PhoneNumberImpl();
     }
 
     @Bean
     public EmailAddressMapper emailAddressMapper() {
-        return new EmailAddressMapper() {
-            @Override
-            public EmailAddressDto emailAddressToEmailAddressDto(EmailAddress emailAddress) {
-                return new EmailAddressDto(emailAddress.getId(), emailAddress.getAddress());
-            }
-
-            @Override
-            public List<EmailAddressDto> emailAddressListToEmailAddressDtoList(List<EmailAddress> emailAddresses) {
-                List<EmailAddressDto> emailAddressDtos = new ArrayList<>();
-                for (EmailAddress emailAddress : emailAddresses) {
-                    emailAddressDtos.add(emailAddressToEmailAddressDto(emailAddress));
-                }
-                return emailAddressDtos;
-            }
-        };
+        return new EmailAddressImpl();
     }
 }

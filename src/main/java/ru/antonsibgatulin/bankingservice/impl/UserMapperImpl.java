@@ -1,4 +1,4 @@
-package ru.antonsibgatulin.bankingservice.config.mapper;
+package ru.antonsibgatulin.bankingservice.impl;
 
 import ru.antonsibgatulin.bankingservice.dto.user.response.UserDto;
 import ru.antonsibgatulin.bankingservice.entity.user.User;
