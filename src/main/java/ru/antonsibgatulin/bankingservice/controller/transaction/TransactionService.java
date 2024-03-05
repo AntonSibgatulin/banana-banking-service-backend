@@ -7,6 +7,8 @@ import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
@@ -36,6 +38,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class TransactionService implements Runnable {
 
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionService.class);
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -47,13 +51,13 @@ public class TransactionService implements Runnable {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
 
-
     private final Queue<TransactionData> transactionQueue = new ConcurrentLinkedQueue<>();
 
     private Thread transactionQueueThread = new Thread(this);
 
     @PostConstruct
     public void init() {
+        LOGGER.info("Initializing TransactionService...");
         transactionQueueThread.start();
     }
 
@@ -67,6 +71,8 @@ public class TransactionService implements Runnable {
 
         var receivedUser = getReceivedUser(transactionDto);
         var receivedUserWallet = walletRepository.getWalletByUser(receivedUser);
+        LOGGER.debug("Sender user: {}, sender wallet: {}, received user: {}, received wallet: {}",
+                senderUser, senderUserWallet, receivedUser, receivedUserWallet);
 
 
         if (senderUserWallet.getBalance().compareTo(transactionDto.getAmount()) < 0) {
@@ -193,6 +199,7 @@ public class TransactionService implements Runnable {
 
     @Override
     public void run() {
+        LOGGER.info("Processing transaction queue...");
         processTransactionQueue();
     }
 

@@ -2,6 +2,8 @@ package ru.antonsibgatulin.bankingservice.controller.profile;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,16 @@ import ru.antonsibgatulin.bankingservice.repository.UserRepository;
 @RequiredArgsConstructor
 @Service
 public class ProfileService {
+    private static final Logger logger = LoggerFactory.getLogger(ProfileService.class);
+
+
     private final UserRepository userRepository;
     private final EmailAddressRepository emailAddressRepository;
     private final PhoneNumberRepository phoneNumberRepository;
 
     public void updateProfile(Authentication authentication,  UserSetUpProfileDto userDto) {
+        logger.info("Updating profile for user: {}", authentication.getName());
+
         // Получение текущего пользователя из аутентификации
         User currentUser = userRepository.getUserByUsername(authentication.getName());
 
@@ -37,11 +44,15 @@ public class ProfileService {
 
         // Сохранение обновленного пользователя в репозитории
         userRepository.save(currentUser);
+        logger.info("Profile updated for user: {}", authentication.getName());
+
+
 
     }
 
 
     public void addPhoneNumber(Authentication authentication, ProfileAddPhoneDto profileAddPhoneDto) {
+        logger.info("Adding phone number for user: {}", authentication.getName());
 
         // Get the current user from the authentication object
         User currentUser = userRepository.getUserByUsername(authentication.getName());
@@ -59,15 +70,19 @@ public class ProfileService {
 
             // Save the updated user to the database
             userRepository.save(currentUser);
+
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new AlreadyExistException("Phone number already use");
         }
+        logger.info("Phone number added for user: {}", authentication.getName());
 
     }
 
 
     public void addEmailAddress(Authentication authentication, ProfileAddEmailDto profileAddEmailDto) {
+        logger.info("Adding email address for user: {}", authentication.getName());
 
         // Get the current user from the authentication object
 
@@ -89,14 +104,19 @@ public class ProfileService {
             // Save the updated user to the database
 
             userRepository.save(currentUser);
+
+
         } catch (Exception e) {
             throw new AlreadyExistException("Email already use");
         }
+        logger.info("Email address added for user: {}", authentication.getName());
 
     }
 
 
     public void deletePhone(Authentication authentication, Long phoneId) {
+        logger.info("Deleting phone for user: {}", authentication.getName());
+
         User currentUser = userRepository.getUserByUsername(authentication.getName());
 
         var phoneNumber = phoneNumberRepository.getPhoneNumberByIdAndUser(phoneId, currentUser);
@@ -108,11 +128,16 @@ public class ProfileService {
         } else {
             throw new NotFoundException("Phone number not found");
         }
+        logger.info("Phone deleted for user: {}", authentication.getName());
+
+
 
     }
 
 
     public void deleteEmail(Authentication authentication, Long emailId) {
+        logger.info("Deleting email for user: {}", authentication.getName());
+
         User currentUser = userRepository.getUserByUsername(authentication.getName());
 
         var emailAddress = emailAddressRepository.getEmailAddressByIdAndUser(emailId, currentUser);
@@ -121,14 +146,19 @@ public class ProfileService {
                 throw new BadRequestException("You cannot delete last email");
             }
             emailAddressRepository.delete(emailAddress);
+
+
         } else {
             throw new NotFoundException("Email not found");
         }
+        logger.info("Email deleted for user: {}", authentication.getName());
 
     }
 
 
     public void changePhoneNumber(Authentication authentication, Long phoneId, ProfileChangePhoneDto profileChangePhoneDto) {
+        logger.info("Changing phone for user: {}", authentication.getName());
+
         User currentUser = userRepository.getUserByUsername(authentication.getName());
 
         var phoneNumber = phoneNumberRepository.getPhoneNumberByIdAndUser(phoneId, currentUser);
@@ -155,10 +185,15 @@ public class ProfileService {
         } else {
             throw new NotFoundException("Phone number not found to change");
         }
+        logger.info("Phone changed for user: {}", authentication.getName());
+
+
     }
 
 
     public void changeEmailAddress(Authentication authentication, Long emailId, ProfileChangeEmailDto profileChangeEmailDto) {
+        logger.info("Changing email for user: {}", authentication.getName());
+
         User currentUser = userRepository.getUserByUsername(authentication.getName());
 
         var emailAddress = emailAddressRepository.getEmailAddressByIdAndUser(emailId, currentUser);
@@ -186,6 +221,9 @@ public class ProfileService {
         } else {
             throw new NotFoundException("Email not found to change");
         }
+        logger.info("Email changed for user: {}", authentication.getName());
+
+
     }
 
 }

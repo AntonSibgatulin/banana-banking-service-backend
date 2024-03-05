@@ -1,6 +1,8 @@
 package ru.antonsibgatulin.bankingservice.controller.auth;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -21,10 +23,12 @@ import ru.antonsibgatulin.bankingservice.service.jwt.JwtService;
 
 import javax.validation.constraints.Email;
 
-@Validated
+
 @RequiredArgsConstructor
 @Component
 public class AuthenticationService {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+
 
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
@@ -36,40 +40,83 @@ public class AuthenticationService {
 
 
     public UserAuthDto signIn(UserAuthenticationDto userAuthenticationDto) {
+
+        logger.info("Starting user authentication process with login: {}", userAuthenticationDto.getLogin());
+
         var user = userRepository.getUserByUsernameAndPassword(userAuthenticationDto.getLogin(), userAuthenticationDto.getPassword());
+
         if (user == null) {
+
+            logger.error("User authentication failed for login: {}", userAuthenticationDto.getLogin());
+
             throw new AuthenticationException("Authorization failed");
+
         }
+
+        logger.info("User authentication successful for login: {}", userAuthenticationDto.getLogin());
+
         return getUserAuthDto(user);
+
     }
 
+
     public UserAuthDto singUp(UserRegistrationDto userRegistrationDto) {
+
+        logger.info("Starting user registration process with login: {}", userRegistrationDto.getLogin());
+
         if (userRepository.existsByUsername(userRegistrationDto.getLogin())) {
+
+            logger.error("User registration failed for login: {}", userRegistrationDto.getLogin());
+
             throw new RegistrationException("Login is already in use");
+
         }
+
         if (emailAddressRepository.existsByAddress(userRegistrationDto.getEmail())) {
+
+            logger.error("User registration failed for email: {}", userRegistrationDto.getEmail());
+
             throw new RegistrationException("Email is already in use");
+
         }
+
         if (phoneNumberRepository.existsByNumber(userRegistrationDto.getPhone())) {
+
+            logger.error("User registration failed for phone: {}", userRegistrationDto.getPhone());
+
             throw new RegistrationException("Phone is already in use");
+
         }
+
 
         var user = new User(userRegistrationDto.getLogin(), userRegistrationDto.getPassword());
+
         userRepository.save(user);
 
+
         var phoneNumber = new PhoneNumber(userRegistrationDto.getPhone(), user);
+
         phoneNumberRepository.save(phoneNumber);
 
+
         var emailAddress = new EmailAddress(userRegistrationDto.getEmail(), user);
+
         emailAddressRepository.save(emailAddress);
 
+
         user.getEmailAddresses().add(emailAddress);
+
         user.getPhoneNumbers().add(phoneNumber);
+
         userRepository.save(user);
 
 
         var wallet = new Wallet(userRegistrationDto.getStartDeposit(), user);
+
         walletRepository.save(wallet);
+
+
+        logger.info("User registration successful for login: {}", userRegistrationDto.getLogin());
 
         return getUserAuthDto(user);
 
