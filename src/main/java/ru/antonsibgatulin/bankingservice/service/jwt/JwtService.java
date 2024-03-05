@@ -29,12 +29,7 @@ public class JwtService {
 
         Map<String, Object> claims = new HashMap<>();
 
-        //claims.put("username", userDetails.getUsername());
 
-        //claims.put("id", userDetails.getId());
-
-
-        //System.out.println(secretKey);
         return Jwts.builder()
 
                 .setClaims(claims)
