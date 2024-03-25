@@ -1,5 +1,6 @@
 package ru.antonsibgatulin.bankingservice.controller.auth;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,7 @@ public class AuthenticationService {
     }
 
 
+    @Transactional
     public UserAuthDto singUp(UserRegistrationDto userRegistrationDto) {
 
         logger.info("Starting user registration process with login: {}", userRegistrationDto.getLogin());

@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import ru.antonsibgatulin.bankingservice.dto.transaction.request.TransactionDto;
 import ru.antonsibgatulin.bankingservice.dto.transaction.request.TransferManagerDto;
+import ru.antonsibgatulin.bankingservice.dto.transaction.response.TransactionObjectDto;
 import ru.antonsibgatulin.bankingservice.dto.transaction.response.TransactionStatusDto;
 import ru.antonsibgatulin.bankingservice.entity.transaction.Transaction;
 import ru.antonsibgatulin.bankingservice.entity.transaction.TransactionStatus;
@@ -25,12 +28,14 @@ import ru.antonsibgatulin.bankingservice.entity.user.User;
 import ru.antonsibgatulin.bankingservice.entity.wallet.Wallet;
 import ru.antonsibgatulin.bankingservice.except.NotFoundException;
 
+import ru.antonsibgatulin.bankingservice.mapper.TransactionMapper;
 import ru.antonsibgatulin.bankingservice.repository.PhoneNumberRepository;
 import ru.antonsibgatulin.bankingservice.repository.TransactionRepository;
 import ru.antonsibgatulin.bankingservice.repository.UserRepository;
 import ru.antonsibgatulin.bankingservice.repository.WalletRepository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,6 +60,8 @@ public class TransactionService implements Runnable {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     private final PlatformTransactionManager transactionManager;
+
+    private final TransactionMapper transactionMapper;
 
 
     private final Queue<TransactionData> transactionQueue = new ConcurrentLinkedQueue<>();
@@ -272,6 +279,16 @@ public class TransactionService implements Runnable {
 
 
         }
+    }
+
+    public List<TransactionObjectDto> getHistory(Authentication authentication, Integer page) {
+        var username = authentication.getName();
+        var user = userRepository.getUserByUsername(username);
+
+        Pageable pageable = PageRequest.of(page, 30);
+        //var list = transactionRepository.findAllByReceivedOrSenderOrderByTransactionTimeDesc(user, user, pageable);
+        var list = transactionRepository.findAllByReceivedOrSenderOrderByTransactionTimeDesc(user, user, pageable);
+        return transactionMapper.fromListTransactionToTransactionObjectDto(list);
     }
 
 

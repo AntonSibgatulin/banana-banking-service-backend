@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 
 import ru.antonsibgatulin.bankingservice.dto.user.request.*;
 
+import ru.antonsibgatulin.bankingservice.dto.user.response.UserDto;
 import ru.antonsibgatulin.bankingservice.except.AlreadyExistException;
 
 import ru.antonsibgatulin.bankingservice.except.BadRequestException;
@@ -62,7 +64,7 @@ public class ProfileController {
     @ApiResponse(responseCode = "200", description = "User profile updated successfully")
     @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)
     @ApiResponse(responseCode = "409", description = "Phone number or email already exists", content = @Content)
-    @PutMapping("/setup")
+    @PostMapping("/setup")
     public ResponseEntity<Void> updateProfile(Authentication authentication, @Valid @RequestBody UserSetUpProfileDto userDto) {
         profileService.updateProfile(authentication, userDto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -135,5 +137,18 @@ public class ProfileController {
         profileService.changeEmailAddress(authentication, emailId, profileChangeEmailDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Get user profile", description = "Retrieves the profile of the authenticated user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getMyProfile(Authentication authentication) {
+        return ResponseEntity.ok(profileService.getMe(authentication));
+    }
+
 
 }

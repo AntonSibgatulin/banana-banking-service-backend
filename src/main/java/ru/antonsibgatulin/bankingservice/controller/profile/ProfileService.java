@@ -9,15 +9,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.antonsibgatulin.bankingservice.dto.user.request.*;
+import ru.antonsibgatulin.bankingservice.dto.user.response.UserDto;
 import ru.antonsibgatulin.bankingservice.entity.user.EmailAddress;
 import ru.antonsibgatulin.bankingservice.entity.user.PhoneNumber;
 import ru.antonsibgatulin.bankingservice.entity.user.User;
 import ru.antonsibgatulin.bankingservice.except.AlreadyExistException;
 import ru.antonsibgatulin.bankingservice.except.BadRequestException;
 import ru.antonsibgatulin.bankingservice.except.NotFoundException;
+import ru.antonsibgatulin.bankingservice.mapper.EmailAddressMapper;
+import ru.antonsibgatulin.bankingservice.mapper.PhoneNumberMapper;
+import ru.antonsibgatulin.bankingservice.mapper.UserMapper;
 import ru.antonsibgatulin.bankingservice.repository.EmailAddressRepository;
 import ru.antonsibgatulin.bankingservice.repository.PhoneNumberRepository;
 import ru.antonsibgatulin.bankingservice.repository.UserRepository;
+import ru.antonsibgatulin.bankingservice.repository.WalletRepository;
 
 @RequiredArgsConstructor
 @Service
@@ -28,8 +33,14 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final EmailAddressRepository emailAddressRepository;
     private final PhoneNumberRepository phoneNumberRepository;
+    private final WalletRepository walletRepository;
 
-    public void updateProfile(Authentication authentication,  UserSetUpProfileDto userDto) {
+    private final UserMapper userMapper;
+    private final PhoneNumberMapper phoneNumberMapper;
+    private final EmailAddressMapper emailAddressMapper;
+
+
+    public void updateProfile(Authentication authentication, UserSetUpProfileDto userDto) {
         logger.info("Updating profile for user: {}", authentication.getName());
 
         // Получение текущего пользователя из аутентификации
@@ -45,7 +56,6 @@ public class ProfileService {
         // Сохранение обновленного пользователя в репозитории
         userRepository.save(currentUser);
         logger.info("Profile updated for user: {}", authentication.getName());
-
 
 
     }
@@ -124,12 +134,19 @@ public class ProfileService {
             if (currentUser.getPhoneNumbers().size() == 1) {
                 throw new BadRequestException("You cannot delete last phone number");
             }
+            for (PhoneNumber phoneNumberItem : currentUser.getPhoneNumbers()) {
+
+                if (phoneNumberItem.getId() == phoneNumber.getId()) {
+                    currentUser.getPhoneNumbers().remove(phoneNumberItem);
+                    break;
+                }
+            }
+            userRepository.save(currentUser);
             phoneNumberRepository.delete(phoneNumber);
         } else {
             throw new NotFoundException("Phone number not found");
         }
         logger.info("Phone deleted for user: {}", authentication.getName());
-
 
 
     }
@@ -142,9 +159,17 @@ public class ProfileService {
 
         var emailAddress = emailAddressRepository.getEmailAddressByIdAndUser(emailId, currentUser);
         if (emailAddress != null) {
-            if (currentUser.getPhoneNumbers().size() == 1) {
+            if (currentUser.getEmailAddresses().size() == 1) {
                 throw new BadRequestException("You cannot delete last email");
             }
+            for (EmailAddress emailAddressItem : currentUser.getEmailAddresses()) {
+
+                if (emailAddressItem.getId() == emailAddress.getId()) {
+                    currentUser.getEmailAddresses().remove(emailAddressItem);
+                    break;
+                }
+            }
+            userRepository.save(currentUser);
             emailAddressRepository.delete(emailAddress);
 
 
@@ -226,4 +251,16 @@ public class ProfileService {
 
     }
 
+    public UserDto getMe(Authentication authentication) {
+        var username = authentication.getName();
+        var user = userRepository.getUserByUsername(username);
+        var phonesDto = phoneNumberMapper.phoneNumberListToPhoneNumberDtoList(user.getPhoneNumbers());
+        var emailsDto = emailAddressMapper.emailAddressListToEmailAddressDtoList(user.getEmailAddresses());
+        var wallet = walletRepository.getWalletByUser(user);
+        var userDto = userMapper.fromUserToUserDto(user);
+        userDto.setEmails(emailsDto);
+        userDto.setPhones(phonesDto);
+        userDto.setWallet(wallet);
+        return userDto;
+    }
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.antonsibgatulin.bankingservice.entity.wallet.Wallet;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,4 +37,6 @@ public class UserDto {
 
     @Schema(description = "List of email addresses associated with the user")
     private List<EmailAddressDto> emails;
+
+    private Wallet wallet;
 }

@@ -30,6 +30,7 @@ public class UserMapperImpl implements UserMapper {
 
                 null,
 
+                null,
                 null
         );
     }

@@ -13,8 +13,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.antonsibgatulin.bankingservice.dto.transaction.request.TransactionDto;
 import ru.antonsibgatulin.bankingservice.dto.transaction.request.TransferManagerDto;
+import ru.antonsibgatulin.bankingservice.dto.transaction.response.TransactionObjectDto;
 import ru.antonsibgatulin.bankingservice.dto.transaction.response.TransactionStatusDto;
 import ru.antonsibgatulin.bankingservice.entity.transaction.TransactionStatus;
+
+import java.util.List;
 
 @Validated
 @Tag(name = "Transaction Controller", description = "API for managing transactions")
@@ -53,5 +56,20 @@ public class TransactionController {
         }
 
     }
+
+
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Get transaction history by page", description = "Retrieves transaction history based on the specified page number")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/history/{page}")
+    public ResponseEntity<List<TransactionObjectDto>> getHistoryOfTransaction(Authentication authentication, @PathVariable Integer page) {
+        List<TransactionObjectDto> historyTransaction = transactionService.getHistory(authentication, page);
+        return ResponseEntity.ok(historyTransaction);
+    }
+
 
 }

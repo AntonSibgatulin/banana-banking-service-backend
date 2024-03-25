@@ -42,7 +42,7 @@ public class UserSetUpProfileDto {
     @AssertTrue(message = "User must be at least 16 years old")
     @Schema(description = "Flag indicating if the user is an adult (at least 16 years old)")
     private Boolean isAdult() {
-        if (birthDay == null) return null;
+        if (birthDay == null) return false;
         return birthDay.plusYears(16).isBefore(LocalDate.now());
     }
 

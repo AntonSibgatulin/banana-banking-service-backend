@@ -13,6 +13,7 @@ public class PhoneNumberDto {
     @Schema(description = "ID of the phone number")
     private Long id;
 
+
     @Schema(description = "Phone number")
     private String phone;
 }

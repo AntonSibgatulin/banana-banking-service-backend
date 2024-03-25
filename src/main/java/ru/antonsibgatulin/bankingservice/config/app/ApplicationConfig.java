@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.antonsibgatulin.bankingservice.repository.UserRepository;
 
 @Configuration
@@ -20,6 +22,15 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
 
 
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("*").allowedMethods("POST", "GET", "OPTIONS", "DELETE");
+            }
+        };
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -45,5 +56,8 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
+
 
 }

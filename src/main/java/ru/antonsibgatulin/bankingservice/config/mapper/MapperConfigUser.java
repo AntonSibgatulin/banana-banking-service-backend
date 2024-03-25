@@ -8,9 +8,11 @@ import ru.antonsibgatulin.bankingservice.entity.user.EmailAddress;
 import ru.antonsibgatulin.bankingservice.entity.user.PhoneNumber;
 import ru.antonsibgatulin.bankingservice.impl.EmailAddressImpl;
 import ru.antonsibgatulin.bankingservice.impl.PhoneNumberImpl;
+import ru.antonsibgatulin.bankingservice.impl.TransactionImpl;
 import ru.antonsibgatulin.bankingservice.impl.UserMapperImpl;
 import ru.antonsibgatulin.bankingservice.mapper.EmailAddressMapper;
 import ru.antonsibgatulin.bankingservice.mapper.PhoneNumberMapper;
+import ru.antonsibgatulin.bankingservice.mapper.TransactionMapper;
 import ru.antonsibgatulin.bankingservice.mapper.UserMapper;
 
 
@@ -34,5 +36,10 @@ public class MapperConfigUser {
     @Bean
     public EmailAddressMapper emailAddressMapper() {
         return new EmailAddressImpl();
+    }
+
+    @Bean
+    public TransactionMapper transactionMapper() {
+        return new TransactionImpl();
     }
 }
